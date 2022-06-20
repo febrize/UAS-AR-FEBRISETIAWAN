@@ -20,6 +20,7 @@
         <!-- create assets -->
         <a-assets timeout="900000">
            <a-asset-item id="skull" src="./assets/hape/scene.gltf"></a-asset-item>
+           <a-asset-item id="suchominus" src="./assets/suchominus/scene.gltf"></a-asset-item>
         </a-assets>
         <!-- handle unknown marker -->
         <a-marker type="unknown">
@@ -28,7 +29,7 @@
 
         <!--handle hiro marker-->
         <a-marker preset="hiro">
-            <a-entity gltf-model="#skull" animation-mixer></a-entity>
+            <a-entity gltf-model="#suchominus" animation-mixer></a-entity>
         </a-marker>
 
         <!-- handle kanji marker -->

@@ -66,7 +66,7 @@
 
         <!-- handle hiro marker -->
         <a-marker preset="hiro">
-            <a-box position="0 0.5 0" src="#ceratosaurus"></a-box>
+          <a-entity gltf-model="#helmet" animation-mixer></a-entity>
         </a-marker>
 
            <!-- handle matrix marker -->
@@ -115,8 +115,7 @@
         
         <!-- handle kanji marker -->
         <a-marker preset="kanji">
-            <a-cylinder position="0 0.5 0" material="opacity: 0.5; side: double;color:green;">
-            </a-cylinder>
+            <a-entity gltf-model="#ceratosaurus"></a-entity>
         </a-marker>
 
         <!-- add a simple camera -->

@@ -9,33 +9,19 @@
     <script src="./js/aframe/aframe.min.js"></script>
     <!-- Library untuk AR yang melakukan pengenalan marker dan menyematkan kamera-->
     <script src="./js/arjs/aframe-ar.js"></script>
-    <title>Web Augmented Reality with AR.js</title>
+    <title>WebAR: Multiple Marker</title>
     <style>
         /* Mengatur posisi elemen pada halaman */
         
-        #UItop {
-            position: absolute;
+        #UI {
+            position: fixed;
             top: 1rem;
-            left: 1rem;
-            right: 1rem;
-        }
-        
-        #UImarker {
-            position: absolute;
-            bottom: 3rem;
-            left: 1rem;
-            right: 1rem;
-        }
-        
-        #UIbottom {
-            position: absolute;
-            bottom: 1rem;
             left: 1rem;
             right: 1rem;
         }
         /* Styling */
         
-        .UI {
+        #UI {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 1.5em;
             font-weight: 200;
@@ -44,127 +30,113 @@
             background-color: blue;
             display: block;
         }
+        
+        .found {
+            color: red;
+            background-color: green;
+        }
+        
+        .lost {
+            color: green;
+            background-color: red;
+        }
     </style>
+    <!-- include text geometry -->
+    <script src="https://unpkg.com/aframe-text-geometry-component@0.5.1/dist/aframe-text-geometry-component.min.js"></script>
 </head>
 
 <body style="margin : 0px; overflow: hidden;">
     <!-- UI Element outside a-scene -->
-    <div id="UItop" class="UI">Arahkan kamera ke marker. Gambar marker yang dapat dicetak ada di direktori pattern.</div>
-    <div id="UImarker" class="UI">Info marker disini.</div>
-    <div id="UIbottom" class="UI"><a href="https://github.com/meizano/AR" target="_blank">Meizano Github WebAR</a> | <a href="./codelist.html" target="_blank">Daftar kode</a>
-    </div>
+    <div id="UI">Marker information here.</div>
 
-    <!-- embedded vr-mode-ui="enabled: false" adalah untuk menonaktifkan tombol VR (stereocospic view) -->
-    <!-- debugUIEnabled: false adalah untuk menonaktifkan UI untuk debugging (true hanya untuk troubleshooting) -->
-    <!-- detectionMode: mono_and_matrix adalah untuk memindai marker matriks | matrixCodeType: 3x3 adalah dimensi matriks yang dipindai -->
-    <a-scene embedded vr-mode-ui="enabled: false" arjs="detectionMode: mono_and_matrix; matrixCodeType: 3x3; debugUIEnabled: false;">
-
-        <!-- handle unknown marker -->
-        <a-marker type="unknown">
-            <a-circle color="purple" radius="1" rotation="-90 0 0">
-                <a-box position="1 1 0" depth="0.3" height="0.3" width="0.3" rotation="0 0 0" material="color: white;" animation="property: rotation; to: 360 360 360; loop: true; dur: 10000; easing: linear"></a-box>
-                <a-text position="0 0 0.2" value="?" color="white" align="center" width="30">
-                </a-text>
-                <a-box position="-1 -1 0" depth="0.3" height="0.3" width="0.3" rotation="0 0 0" material="color: white;" animation="property: rotation; to: 360 360 360; loop: true; dur: 10000; easing: linear"></a-box>
-            </a-circle>
-        </a-marker>
+    <a-scene embedded vr-mode-ui="enabled: false" arjs="detectionMode: mono_and_matrix; matrixCodeType: 3x3; debugUIEnabled: true;">
+        <!-- create assets -->
+        <a-assets timeout="900000">
+           
+            <a-asset-item id="ceratosaurus" src="./assets/kitten/scene.gltf"></a-asset-item>
+          
+            <a-asset-item id="helmet" src="./assets/suchominus/scene.gltf"></a-asset-item>
+            <a-asset-item id="exoItalicFont" src="https://cdn.glitch.com/c719c986-c0c5-48b8-967c-3cd8b8aa17f3%2Fexo2BlackItalic.typeface.json?1490305922725"></a-asset-item>
+        </a-assets>
 
         <!-- handle hiro marker -->
         <a-marker preset="hiro">
-            <a-circle color="blue" radius="1" rotation="-90 0 0">
-                <a-box position="1 1 0" depth="0.3" height="0.3" width="0.3" rotation="0 0 0" material="color: orange;" animation="property: rotation; to: 360 360 360; loop: true; dur: 10000; easing: linear"></a-box>
-                <a-text position="0 0 0.2" value="Hiro" color="orange" align="center" width="30">
-                </a-text>
-                <a-box position="-1 -1 0" depth="0.3" height="0.3" width="0.3" rotation="0 0 0" material="color: orange;" animation="property: rotation; to: 360 360 360; loop: true; dur: 10000; easing: linear"></a-box>
-            </a-circle>
+          <a-entity gltf-model="#helmet" animation-mixer></a-entity>
         </a-marker>
 
+        <!-- handle matrix marker -->
+        <a-marker type="barcode" value="1">
+            <a-plane width="1" height="1" position="0 0 0" rotation="-90 0 0" color="green">
+                <a-gltf-model src="#helmet" rotation="90 0 0" position="0 -0.2 0.2" scale="0.5 0.5 0.5"></a-gltf-model>
+            </a-plane>
+        </a-marker>
+
+        <!-- handle matrix marker -->
+        <a-marker type="barcode" value="2">
+            <a-plane width="1" height="1" position="0 0 0" rotation="-90 0 0" color="cyan">
+                <a-gltf-model src="#ceratosaurus" rotation="90 0 0" position="0 -0.2 0.5" scale="1 1 1"></a-gltf-model>
+            </a-plane>
+        </a-marker>
+        
         <!-- handle kanji marker -->
         <a-marker preset="kanji">
-            <a-circle color="green" radius="1" rotation="-90 0 0">
-                <a-box position="1 1 0" depth="0.3" height="0.3" width="0.3" rotation="0 0 0" material="color: yellow;" animation="property: rotation; to: 360 360 360; loop: true; dur: 10000; easing: linear"></a-box>
-                <a-text position="0 0 0.2" value="⼈" color="yellow" align="center" width="30">
-                </a-text>
-                <a-box position="-1 -1 0" depth="0.3" height="0.3" width="0.3" rotation="0 0 0" material="color: yellow;" animation="property: rotation; to: 360 360 360; loop: true; dur: 10000; easing: linear"></a-box>
-            </a-circle>
+            <a-entity gltf-model="#ceratosaurus"></a-entity>
         </a-marker>
 
         <!-- add a simple camera -->
         <a-entity camera></a-entity>
     </a-scene>
+
     <script>
-        // mengakses DOM UI
-        let ui = document.querySelector("#UImarker");
+        let ui = document.querySelector("#UI");
 
-        // mengakses DOM scene
-        let scene = document.querySelector("a-scene");
+        // Function to display information
+        function markerInfo(marker, evt, infoui) {
+            let posx = marker.object3D.position.x;
+            let posy = marker.object3D.position.y;
+            let posz = marker.object3D.position.z;
 
-        // Fungsi membuat obyek tulisan pada a-frame
-        function listBarcode(barcode, scenel) {
-            for (let i = 0; i < barcode; i++) {
-                let marker =
-                    `<a-marker type="barcode" value="${i}">
-                        <a-circle color="black" radius="1" rotation="-90 0 0" >
-                            <a-box position="1 1 0" depth="0.3" height="0.3" width="0.3" rotation="0 0 0" material="color: red;"
-                animation="property: rotation; to: 360 360 360; loop: true; dur: 10000; easing: linear"></a-box>
-                            <a-text 
-                                position="0 0 0.2"
-                                value="${i}" 
-                                color="red" 
-                                align="center"
-                                width="30">
-                            </a-text>
-                            <a-box position="-1 -1 0" depth="0.3" height="0.3" width="0.3" rotation="0 0 0" material="color: red;"
-                animation="property: rotation; to: 360 360 360; loop: true; dur: 10000; easing: linear"></a-box>
-                        </a-circle>
-                </a-marker>
-                `;
-                scenel.insertAdjacentHTML("beforeend", marker);
+
+            let message = "marker " + m.getAttribute("type") + " " + m.getAttribute("value") + " at x: " + marker.object3D.position.x + ", y: " + marker.object3D.position.x + ", z: " + marker.object3D.position.z;
+
+            if (evt) {
+                infoui.classList.remove("lost");
+                infoui.classList.add("found");
+                message = "Found " + message;
+            } else {
+                infoui.classList.remove("found");
+                infoui.classList.add("lost");
+                message = "Lost " + message;
             }
+
+            infoui.innerHTML = message;
         }
 
-        function detectMarker(scenel, uiobj) {
+        // Detecting single marker
+        let m = document.querySelector("a-marker[preset="
+            hiro "]");
 
-            // Function to display information
-            function markerInfo(marker, evt, infoui) {
-                let posx = marker.object3D.position.x;
-                let posy = marker.object3D.position.y;
-                let posz = marker.object3D.position.z;
+        m.addEventListener("markerFound", (e) => {
+            markerInfo(m, true, ui);
+        });
 
-                let markerID = marker.getAttribute("preset") ? marker.getAttribute("preset") : marker.getAttribute("type") == "barcode" ? marker.getAttribute("type") + " " + marker.getAttribute("value") : marker.getAttribute("type");
-                let message = "marker " + markerID + " at x: " + marker.object3D.position.x + ", y: " + marker.object3D.position.x + ", z: " + marker.object3D.position.z;
+        m.addEventListener("markerLost", (e) => {
+            markerInfo(m, false, ui);
+        });
 
-                if (evt) {
-                    infoui.classList.remove("lost");
-                    infoui.classList.add("found");
-                    message = "Found " + message;
-                } else {
-                    infoui.classList.remove("found");
-                    infoui.classList.add("lost");
-                    message = "Lost " + message;
-                }
+        // Detecting multiple marker
+        let ms = document.querySelectorAll("a-marker");
 
-                infoui.innerHTML = message;
-            }
+        for (let i = 0; i < ms.length; i++) {
+            ms[i].addEventListener("markerFound", (e) => {
+                markerInfo(ms[i], true, ui);
+            });
 
-            // Detecting multiple marker
-            let ms = document.querySelectorAll("a-marker");
-
-            for (let i = 0; i < ms.length; i++) {
-                ms[i].addEventListener("markerFound", (e) => {
-                    markerInfo(ms[i], true, uiobj);
-                });
-
-                ms[i].addEventListener("markerLost", (e) => {
-                    markerInfo(ms[i], false, uiobj);
-                });
-            }
+            ms[i].addEventListener("markerLost", (e) => {
+                markerInfo(ms[i], false, ui);
+            });
         }
-
-        listBarcode(64, scene);
-        detectMarker(scene, ui);
     </script>
-
 </body>
 
 </html>
